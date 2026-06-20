@@ -12,4 +12,8 @@ export const categoryService = {
             body: JSON.stringify(payload),
         });
     },
+    search(keyword: string) {
+        return apiFetch<Category[]>(`/category/search?keyword=${encodeURIComponent(keyword)}`);
+    },
+
 };
