@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/configs/httpClient";
-import { Product } from "@/lib/types/product";
+import { CreateProductPayload, CreateProductResponse, Product } from "@/lib/types/product";
+
 
 export const productService = {
     getAll(page = 1, limit = 10, name?: string) {
@@ -9,6 +10,14 @@ export const productService = {
     },
     getById(id:number){
         return apiFetch<Product>(`/product/${id}`);
+    },
+
+    create(payload: CreateProductPayload){
+        return apiFetch<CreateProductResponse>("/product", {
+          method: "POST",
+             headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
     }
 };
 

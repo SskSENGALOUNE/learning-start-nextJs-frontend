@@ -127,14 +127,14 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 
 ## POST — ฟอร์มส่งข้อมูลสร้างใหม่ (8 ครั้ง)
 
-- [ ] 1. ฟอร์มสร้าง product ใหม่ (`POST /api/product` — `{name, price, stock}`) พร้อม client-side validation
+- [x] 1. ฟอร์มสร้าง product ใหม่ (`POST /api/product` — `{name, price, stock}`) พร้อม client-side validation
 - [ ] 2. ฟอร์มสร้าง category ใหม่ (`POST /api/category` — `{name}`)
 - [ ] 3. ฟอร์มสร้าง customer ใหม่ (`POST /api/customer` — `{name, email}`)
 - [ ] 4. ฟอร์มสร้าง order: เลือก customer + เพิ่ม/ลบ item ได้หลายแถวก่อน submit (`POST /api/order` — nested `items[]`)
 - [ ] 5. แสดง validation error จาก backend ตรงๆ ใต้ field ที่ผิด (เช่น `price` เป็นค่าลบ)
 - [ ] 6. แสดง error เฉพาะกรณีข้อมูลขัดแย้ง (เช่นชื่อ category ซ้ำ → backend ส่ง `ConflictException`)
-- [ ] 7. feedback ตอนสร้างสำเร็จ (toast/alert) + เคลียร์ฟอร์มหรือ redirect ไปหน้า detail
-- [ ] 8. disable ปุ่ม submit ระหว่างรอ response กัน double submit
+- [x] 7. feedback ตอนสร้างสำเร็จ (toast/alert) + เคลียร์ฟอร์มหรือ redirect ไปหน้า detail
+- [x] 8. disable ปุ่ม submit ระหว่างรอ response กัน double submit
 
 ## PATCH/PUT — ฟอร์มแก้ไขข้อมูล (5 ครั้ง)
 
