@@ -116,7 +116,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 - [ ] 4. ฟอร์ม filter product ด้วยช่วงราคา min/max (`GET /api/product/search?minPrice=&maxPrice=`)
 - [ ] 5. ปุ่ม/dropdown sort product ตามราคา asc/desc (`GET /api/product/sort?order=`)
 - [ ] 6. ฟอร์ม filter รวมหลาย field พร้อมกัน (`GET /api/product/filter?minPrice=&minStock=`)
-- [ ] 7. Pagination แบบปุ่ม "หน้าก่อน/หน้าถัดไป" (`GET /api/product?page=&limit=`)
+- [x] 7. Pagination แบบปุ่ม "หน้าก่อน/หน้าถัดไป" (`GET /api/product?page=&limit=`)
 - [ ] 8. การ์ดสรุป stats สั้นๆ บนหน้า dashboard (`GET /api/product/stats`)
 - [ ] 9. หน้า group สินค้าตาม category (`GET /api/product/by-category`)
 - [ ] 10. หน้า order detail ที่แสดง customer + รายการ items ครบ (`GET /api/order/:id`)

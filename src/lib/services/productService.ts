@@ -8,3 +8,4 @@ export const productService = {
         return apiFetch<Product[]>(`/product?${query.toString()}`);
     },
 };
+

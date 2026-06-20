@@ -3,9 +3,10 @@
 import { useProducts } from "@/hooks/useProducts";
 
 export default function ProductsPage() {
-    const { data, loading } = useProducts();
+    const { data, meta, loading, params, updateParams } = useProducts();
 
     if (loading) return <p>Loading...</p>;
+
 
     return (
         <main>
@@ -17,6 +18,25 @@ export default function ProductsPage() {
                     </li>
                 ))}
             </ul>
+
+            <div>
+                <button
+                    disabled={params.page <= 1}
+                    onClick={() => updateParams({ page: params.page - 1 })}
+                >
+                    back
+                </button>
+                <span>
+                    หน้า {meta?.page} / {meta?.totalPages}
+                </span>
+                <button
+                    disabled={!meta || params.page >= meta.totalPages}
+                    onClick={() => updateParams({ page: params.page + 1 })}
+                >
+                    ถัดไป
+                </button>
+
+            </div>
         </main>
     );
 }
