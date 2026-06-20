@@ -111,7 +111,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 ## GET — ดึงข้อมูลมาแสดง (14 ครั้ง)
 
 - [x] 1. หน้า list แสดง product ทั้งหมด (`GET /api/product`) — Client Component + `useProducts()` hook (เสร็จแล้ว ดู `src/hooks/useProducts.ts`)
-- [ ] 2. หน้า detail ตาม id แบบ dynamic route `/product/[id]` (`GET /api/product/:id`)
+- [x] 2. หน้า detail ตาม id แบบ dynamic route `/product/[id]` (`GET /api/product/:id`)
 - [ ] 3. กล่อง search ค้นหา category ด้วย keyword (`GET /api/category/search?keyword=`) — Client Component + debounce
 - [ ] 4. ฟอร์ม filter product ด้วยช่วงราคา min/max (`GET /api/product/search?minPrice=&maxPrice=`)
 - [ ] 5. ปุ่ม/dropdown sort product ตามราคา asc/desc (`GET /api/product/sort?order=`)

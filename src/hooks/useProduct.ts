@@ -24,6 +24,7 @@ export const useProduct = (id:number) =>{
     },[id]);
 
     useEffect(()=>{
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount, mirrors mastermind's hook convention
         fetchProduct();
     },[fetchProduct])
        return { data, loading, error, refresh: fetchProduct };
