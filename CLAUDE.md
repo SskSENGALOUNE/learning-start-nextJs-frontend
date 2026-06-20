@@ -128,7 +128,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 ## POST — ฟอร์มส่งข้อมูลสร้างใหม่ (8 ครั้ง)
 
 - [x] 1. ฟอร์มสร้าง product ใหม่ (`POST /api/product` — `{name, price, stock}`) พร้อม client-side validation
-- [ ] 2. ฟอร์มสร้าง category ใหม่ (`POST /api/category` — `{name}`)
+- [x] 2. ฟอร์มสร้าง category ใหม่ (`POST /api/category` — `{name}`)
 - [ ] 3. ฟอร์มสร้าง customer ใหม่ (`POST /api/customer` — `{name, email}`)
 - [ ] 4. ฟอร์มสร้าง order: เลือก customer + เพิ่ม/ลบ item ได้หลายแถวก่อน submit (`POST /api/order` — nested `items[]`)
 - [ ] 5. แสดง validation error จาก backend ตรงๆ ใต้ field ที่ผิด (เช่น `price` เป็นค่าลบ)
