@@ -7,5 +7,8 @@ export const productService = {
         if (name) query.set("name", name);
         return apiFetch<Product[]>(`/product?${query.toString()}`);
     },
+    getById(id:number){
+        return apiFetch<Product>(`/product/${id}`);
+    }
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useProducts } from "@/hooks/useProducts";
+import Link from "next/link";
 
 export default function ProductsPage() {
     const { data, meta, loading, params, updateParams } = useProducts();
@@ -10,11 +11,13 @@ export default function ProductsPage() {
 
     return (
         <main>
-            <h1>Products</h1>
+             <h1>Products</h1>
             <ul>
                 {data.map((p) => (
                     <li key={p.id}>
-                        {p.name} — ฿{p.price} (stock: {p.stock})
+                        <Link href={`/products/${p.id}`}>
+                            {p.name} — ฿{p.price} (stock: {p.stock})
+                        </Link>
                     </li>
                 ))}
             </ul>
