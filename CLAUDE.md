@@ -27,6 +27,9 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
   }
   ```
   ดังนั้น fetcher ฝั่ง frontend ต้อง unwrap `.data` เสมอ ห้าม assume ว่า response คือ entity ตรงๆ
+  (ใน layer `lib/configs/httpClient.ts` ของโปรเจกต์นี้ `apiFetch` คืน envelope ทั้งก้อนออกมาตรงๆ
+  ไม่ unwrap ให้ — ปล่อยให้ `lib/services/*Service.ts` หรือ hook ที่เรียกใช้เป็นคนดึง `.data`/`.meta` เอาเอง
+  ตาม pattern เดียวกับ `achievementsSerive.getAll()` ใน `web-admin-mastermind`)
 - ตอน error (4xx/5xx) backend ส่ง shape นี้กลับมาจาก `HttpExceptionFilter` (ดู `data: null`, `message` อาจเป็น string หรือ string[] ตอน validation fail หลายข้อ):
   ```ts
   { success: false, statusCode: number, message: string | string[], data: null, timestamp, path }
@@ -49,27 +52,55 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
 เมื่อผู้ใช้พิมพ์ขอให้ทำ checklist ข้อใดข้อหนึ่ง (เช่น "ทำ GET ข้อที่ 3"):
 
 1. **เขียนตัวอย่าง pattern ให้ดูก่อน** — โชว์โค้ดตัวอย่าง (snippet ในแชท ไม่ต้องลงไฟล์จริง)
-   พร้อมอธิบายว่าทำไมต้องเขียนแบบนี้ จุดไหนคือหัวใจของ pattern นั้น (เช่น ทำไมต้อง fetch ฝั่ง server
-   component ไม่ใช่ client, ทำไมต้อง unwrap `.data`)
+   พร้อมอธิบายว่าทำไมต้องเขียนแบบนี้ จุดไหนคือหัวใจของ pattern นั้น (เช่น ทำไม layer types/services/hooks
+   ต้องแยกกัน, ทำไม hook ต้อง unwrap `.data`/`.meta` เอง ไม่ใช่ httpClient)
 2. **อย่า implement ลงไฟล์จริงให้ทันที** — ปล่อยให้ผู้ใช้เขียนตามด้วยตัวเอง
 3. หลังผู้ใช้เขียนเสร็จและขอให้ตรวจ ให้ **review** โค้ด ชี้จุดที่พลาด/ปรับปรุงได้ พร้อมอธิบายเหตุผล
 4. เลือกว่าแต่ละ checklist item จะ "สร้างหน้า/route ใหม่" หรือ "เพิ่ม component ใน route เดิม"
    ให้พิจารณาตามความเหมาะสมของแต่ละข้อ
 5. ก่อนเริ่มข้อที่ต้อง call API ตัวใหม่ ให้เตือนผู้ใช้เปิด backend ไว้ก่อน (`npm run start:dev`)
 
+# สถาปัตยกรรม: layer ของ frontend นี้
+
+ตั้งแต่ resource `product` เป็นต้นไป โปรเจกต์นี้จัด layer ตาม pattern เดียวกับ `web-admin-mastermind`
+(โปรเจกต์จริงข้างเคียงใน `lernning-full/`) — ไม่ใช้ Server Component fetch ตรงๆ ในหน้าอีกแล้ว
+แต่แยกเป็น 4 ชั้นต่อ resource:
+
+```
+src/lib/configs/httpClient.ts   # apiFetch<T>() ตัวเดียว ใช้ร่วมกันทุก resource
+                                 # คืน ApiEnvelope<T> เต็มก้อน { success, message, data, meta? }
+                                 # ไม่ unwrap ให้ — throw error เองถ้า !res.ok || !json.success
+
+src/lib/types/<resource>.ts     # type ของ entity (เช่น Product) เก็บแยกจาก service
+
+src/lib/services/<resource>Service.ts
+                                 # object เปล่าๆ (ไม่ใช่ class ก็ได้ ถ้าไม่มี state ภายใน) มีฟังก์ชันต่อ endpoint
+                                 # เช่น getAll(page, limit, ...filters) เรียก apiFetch แล้ว return envelope ตรงๆ
+
+src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, params)
+                                 # + useCallback fetchXxx() + useEffect เรียกตอน mount/params เปลี่ยน
+                                 # + updateParams() + refresh() — เป็นคนแยก .data/.meta ออกจาก envelope
+```
+
+หน้า (`page.tsx`) เป็น **Client Component** (`"use client"`) เรียก hook ตรงๆ แล้ว render —
+ไม่ fetch เองในหน้า ไม่ unwrap envelope เองในหน้า ปล่อยให้ hook จัดการให้หมด
+
+> หมายเหตุ ESLint: `react-hooks/set-state-in-effect` จะ flag การเรียก fetch function (ที่ setState ข้างใน)
+> จาก `useEffect` ตรงๆ — เป็น fetch-on-mount pattern ที่ตั้งใจทำ ให้ใส่
+> `// eslint-disable-next-line react-hooks/set-state-in-effect` พร้อม comment สั้นๆ อธิบายเหตุผลไว้ด้วย
+
 # สูตรมาตรฐาน: ขั้นตอนทำ 1 ฟีเจอร์ที่ call API
 
 ใช้เป็น checklist ย่อยทุกครั้งที่ทำ feature ใหม่ (ไม่ว่าจะ fetch หรือ submit ฟอร์ม):
 
 - [ ] 1. เปิดดู controller/DTO จริงฝั่ง backend เพื่อยืนยัน shape ของ request/response
-- [ ] 2. กำหนด TypeScript type/interface ของ response (เผื่อ unwrap จาก envelope `{ data: T }`)
-- [ ] 3. เขียนฟังก์ชัน fetcher ใน `src/lib/` (เช่น `src/lib/product.ts`) เรียกด้วย `fetch` พร้อม base URL, unwrap `.data`, throw error ถ้า `success: false`
-- [ ] 4. เลือกว่าจะ fetch ฝั่ง Server Component (default, ไม่มี interactivity) หรือ Client Component + `useEffect`/hook (ต้องมี state/interactivity)
-- [ ] 5. ถ้าเรียกซ้ำในหลายที่ ห่อ logic เป็น custom hook ใน `src/hooks/` (เช่น `useProducts`)
-- [ ] 6. เขียน UI component ใน `src/components/` รับ data มา render
-- [ ] 7. จัดการ loading / error / empty state ให้ครบ (`loading.tsx`, `error.tsx`, หรือ conditional render)
-- [ ] 8. ถ้าเป็นฟอร์ม ผูก state ด้วย `useState`/`useActionState` หรือ native `<form action>` ตามความเหมาะสม + validate ฝั่ง client ก่อนยิงจริง
-- [ ] 9. ทดสอบจริงผ่าน browser กับ backend ที่รันอยู่ ทั้ง happy path และ edge case (404, validation error, ผลลัพธ์ว่าง)
+- [ ] 2. เพิ่ม type ของ entity ใน `src/lib/types/<resource>.ts`
+- [ ] 3. เพิ่มฟังก์ชันใน `src/lib/services/<resource>Service.ts` เรียก `apiFetch` จาก `httpClient.ts` (ห้าม unwrap ที่นี่ ปล่อยให้ hook unwrap)
+- [ ] 4. เขียน/แก้ custom hook ใน `src/hooks/use<Resource>.ts` — เพิ่ม state ใหม่ที่ต้องใช้ (เช่น filter param ใหม่) แล้ว unwrap `.data`/`.meta` จาก envelope
+- [ ] 5. เขียน UI component ใน `src/components/` หรือใน `page.tsx` ตรงๆ ถ้ายังไม่ซับซ้อน รับค่าจาก hook มา render
+- [ ] 6. จัดการ loading / error / empty state ให้ครบ (ใช้ field `loading`/`error` ที่ hook return มา)
+- [ ] 7. ถ้าเป็นฟอร์ม ผูก state ด้วย `useState`/`useActionState` หรือ native `<form action>` ตามความเหมาะสม + validate ฝั่ง client ก่อนยิงจริง
+- [ ] 8. ทดสอบจริงผ่าน browser กับ backend ที่รันอยู่ ทั้ง happy path และ edge case (404, validation error, ผลลัพธ์ว่าง)
 
 ---
 
@@ -79,7 +110,7 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
 
 ## GET — ดึงข้อมูลมาแสดง (14 ครั้ง)
 
-- [ ] 1. หน้า list แสดง product ทั้งหมด (`GET /api/product`) — Server Component fetch
+- [x] 1. หน้า list แสดง product ทั้งหมด (`GET /api/product`) — Client Component + `useProducts()` hook (เสร็จแล้ว ดู `src/hooks/useProducts.ts`)
 - [ ] 2. หน้า detail ตาม id แบบ dynamic route `/product/[id]` (`GET /api/product/:id`)
 - [ ] 3. กล่อง search ค้นหา category ด้วย keyword (`GET /api/category/search?keyword=`) — Client Component + debounce
 - [ ] 4. ฟอร์ม filter product ด้วยช่วงราคา min/max (`GET /api/product/search?minPrice=&maxPrice=`)
@@ -136,10 +167,12 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
 
 - ทุกครั้งที่ทำ checklist เสร็จ ให้ขีดเครื่องหมาย `[x]` ในไฟล์นี้ เพื่อ track ความคืบหน้า เหมือนฝั่ง backend
 - ถ้า pattern ไหนเริ่มทำได้คล่องแล้ว ข้ามไปข้อถัดไปได้เลย ไม่จำเป็นต้องทำครบทุกข้อ
-- โปรเจกต์นี้เพิ่งตั้งต้นจาก `create-next-app` (Next.js 16, React 19, Tailwind v4) — ยังไม่มี data-fetching
-  library ติดตั้ง (ไม่มี axios/SWR/TanStack Query) ถ้าจะใช้ตัวไหนให้ติดตั้งเองตอนถึง checklist ที่เกี่ยวข้อง
-  ไม่ต้องติดตั้งล่วงหน้า — เริ่มจาก native `fetch` ก่อนเสมอ
-- โครงสร้างปัจจุบัน: `src/app` (route ตาม App Router), `src/components` (UI component), `src/hooks` (custom hook),
-  `src/lib` (fetcher/utility) — ทุกโฟลเดอร์ยังว่างอยู่ ให้ค่อยเติมตามแต่ละ checklist item
+- โปรเจกต์นี้ตั้งต้นจาก `create-next-app` (Next.js 16, React 19, Tailwind v4) — ตั้งใจ **ไม่ใช้ axios**
+  (เทียบกับ `web-admin-mastermind` ที่ใช้ axios + interceptor เพราะมี auth token ต้อง attach) เพราะ backend
+  ฝึกนี้ไม่มี auth เลยพอใช้ native `fetch` ห่อใน `httpClient.ts` ตัวเดียวก็เพียงพอ — ไม่ต้องติดตั้ง library เพิ่ม
+- โครงสร้างปัจจุบัน: `src/app` (route ตาม App Router, page เป็น Client Component), `src/components` (UI component
+  ที่ใช้ร่วมกันหลาย resource), `src/hooks` (`use<Resource>.ts` ต่อ resource), `src/lib/configs` (`httpClient.ts`),
+  `src/lib/types` (`<resource>.ts`), `src/lib/services` (`<resource>Service.ts`) — ดู resource `product` เป็นตัวอย่างอ้างอิง
+  ตอนเพิ่ม resource ใหม่ (category, customer, order, bank-account)
 - Next.js เวอร์ชันนี้ใหม่กว่าที่ Claude เคยเทรนมา ดู `AGENTS.md` ว่าให้เช็ค `node_modules/next/dist/docs/`
   ก่อนเขียนโค้ดที่ไม่มั่นใจเรื่อง API ที่เปลี่ยนไป

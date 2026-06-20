@@ -1,0 +1,53 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { PaginationMeta } from "@/lib/types/pagination";
+import { Product } from "@/lib/types/product";
+import { productService } from "@/lib/services/productService";
+
+export const useProducts = (initialLimit = 10) => {
+    const [data, setData] = useState<Product[]>([]);
+    const [meta, setMeta] = useState<PaginationMeta | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const [params, setParams] = useState({
+        page: 1,
+        limit: initialLimit,
+        name: "",
+    });
+
+    const fetchProducts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await productService.getAll(params.page, params.limit, params.name);
+            setData(res.data);
+            setMeta(res.meta ?? null);
+        } catch (err) {
+            console.error("Product Fetch Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [params]);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount, mirrors mastermind's hook convention
+        fetchProducts();
+    }, [fetchProducts]);
+
+    const updateParams = (newParams: Partial<typeof params>) => {
+        setParams((prev) => ({
+            ...prev,
+            ...newParams,
+            page: newParams.page ?? 1,
+        }));
+    };
+
+    return {
+        data,
+        meta,
+        loading,
+        params,
+        updateParams,
+        refresh: fetchProducts,
+    };
+};
