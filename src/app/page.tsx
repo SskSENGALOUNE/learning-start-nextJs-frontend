@@ -7,7 +7,7 @@ const pages = [
   { href: "/bank-accounts/compare", label: "Bank Accounts (Offset vs Cursor)" },
   { href: "/bank-accounts/benchmark", label: "Benchmark (Compare 4 method)" },
   { href: "/bank-accounts/composite", label: "Composite Filter" },
-
+  { href: "/ui-component", label: "UI Component" },
 ];
 
 export default function Home() {
