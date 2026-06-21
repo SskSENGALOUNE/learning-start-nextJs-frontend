@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { DeleteModal } from "@/components/ui/DeleteModal";
 import { LoadingModal } from "@/components/ui/LoadingModal";
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
@@ -140,25 +141,83 @@ export default function ProductsPage() {
 
           {/* Pagination Section */}
           <div className="flex items-center justify-between px-6 py-4 bg-gray-50/50 border-t border-gray-100 text-sm">
-            <button
+            <Button
+              variant="outline"
+              className="px-3 py-1.5 text-xs"
               disabled={params.page <= 1}
               onClick={() => updateParams({ page: params.page - 1 })}
-              className="inline-flex items-center justify-center px-3 py-1.5 bg-white border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-all text-xs"
+              icon={
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              }
             >
               Back
-            </button>
+            </Button>
 
-            <span className="text-gray-600 font-medium">
-              หน้า {meta?.page || 1} / {meta?.totalPages || 1}
-            </span>
-
-            <button
+            <Button
+              variant="outline"
+              className="px-3 py-1.5 text-xs"
               disabled={!meta || params.page >= meta.totalPages}
               onClick={() => updateParams({ page: params.page + 1 })}
-              className="inline-flex items-center justify-center px-3 py-1.5 bg-white border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-all text-xs"
+              icon={
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              }
+              iconPosition="right"
             >
               Next
-            </button>
+            </Button>
+
+            <span className="text-gray-600 font-medium">
+              Page {meta?.page || 1} / {meta?.totalPages || 1}
+            </span>
+
+            <Button
+              variant="outline"
+              className="px-3 py-1.5 text-xs"
+              disabled={!meta || params.page >= meta.totalPages}
+              onClick={() => updateParams({ page: params.page + 1 })}
+              icon={
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              }
+              iconPosition="right"
+            >
+              Next
+            </Button>
           </div>
         </div>
         <DeleteModal
