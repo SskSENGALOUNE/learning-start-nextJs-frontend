@@ -1,4 +1,4 @@
-// src/components/LoadingModal.tsx
+// src/components/ui/LoadingModal/index.tsx
 "use client";
 
 export function LoadingModal({

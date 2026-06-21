@@ -1,4 +1,4 @@
-// src/components/Toast.tsx
+// src/components/ui/Toast/index.tsx
 "use client";
 
 export function Toast({ message }: { message: string | null }) {

@@ -1,4 +1,4 @@
-// src/components/SuccessModal.tsx
+// src/components/ui/SuccessModal/index.tsx
 "use client";
 
 export function SuccessModal({

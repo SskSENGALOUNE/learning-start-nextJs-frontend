@@ -1,6 +1,6 @@
 "use client";
 
-import { SuccessModal } from "@/components/SuccessModal";
+import { SuccessModal } from "@/components/ui/SuccessModal";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

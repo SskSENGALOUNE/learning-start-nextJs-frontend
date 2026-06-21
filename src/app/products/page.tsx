@@ -1,7 +1,7 @@
 "use client";
 
-import { DeleteModal } from "@/components/DeleteModal";
-import { LoadingModal } from "@/components/LoadingModal";
+import { DeleteModal } from "@/components/ui/DeleteModal";
+import { LoadingModal } from "@/components/ui/LoadingModal";
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
 import { useProducts } from "@/hooks/useProducts";
 import { Product } from "@/lib/types/product";

@@ -1,4 +1,4 @@
-// src/components/DeleteModal.tsx
+// src/components/ui/DeleteModal/index.tsx
 "use client";
 
 export function DeleteModal({

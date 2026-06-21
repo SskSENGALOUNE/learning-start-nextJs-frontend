@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useOffsetVsCursor } from "@/hooks/useOffsetVsCursor";
-import { LoadingToast } from "@/components/LoadingToast";
-import { Toast } from "@/components/Toast";
+import { LoadingToast } from "@/components/ui/LoadingToast";
+import { Toast } from "@/components/ui/Toast";
 
 export default function CompareBankAccountsPage() {
     const { offsetResult, cursorResult, loading, error, run } = useOffsetVsCursor(20);
