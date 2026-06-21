@@ -40,7 +40,8 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
     `GET /api/product/by-category`, `POST /api/product` (`{name, price, stock}`), `PATCH /api/product/:id` (`{name?, price?}`),
     `DELETE /api/product/:id`
   - `GET /api/category`, `GET /api/category/:id`, `GET /api/category/search?keyword=`, `POST /api/category` (`{name}`)
-  - `POST /api/customer` (`{name, email}`), `PUT /api/customer/:email` (`{name}`) — upsert
+  - `GET /api/customer` (เพิ่มเองระหว่างฝึก ของเดิม backend ไม่มี), `POST /api/customer` (`{name, email}`),
+    `PUT /api/customer/:email` (`{name}`) — upsert
   - `POST /api/order` (`{customerId, items: [{productId, quantity}]}`), `GET /api/order/:id`, `GET /api/order/status?status=`
   - `GET /api/bank-accounts/offset?page=&limit=`, `/cursor?cursorId=&limit=`, `/filter?bankName=&limit=`, `/stats`,
     `/top?n=`, `/top/orm?n=`, `/composite?accountType=&isActive=&limit=`, `/index-compare?bankName=&rate=&limit=`, `/benchmark`
@@ -129,7 +130,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 
 - [x] 1. ฟอร์มสร้าง product ใหม่ (`POST /api/product` — `{name, price, stock}`) พร้อม client-side validation
 - [x] 2. ฟอร์มสร้าง category ใหม่ (`POST /api/category` — `{name}`)
-- [ ] 3. ฟอร์มสร้าง customer ใหม่ (`POST /api/customer` — `{name, email}`)
+- [x] 3. ฟอร์มสร้าง customer ใหม่ (`POST /api/customer` — `{name, email}`)
 - [ ] 4. ฟอร์มสร้าง order: เลือก customer + เพิ่ม/ลบ item ได้หลายแถวก่อน submit (`POST /api/order` — nested `items[]`)
 - [ ] 5. แสดง validation error จาก backend ตรงๆ ใต้ field ที่ผิด (เช่น `price` เป็นค่าลบ)
 - [ ] 6. แสดง error เฉพาะกรณีข้อมูลขัดแย้ง (เช่นชื่อ category ซ้ำ → backend ส่ง `ConflictException`)
