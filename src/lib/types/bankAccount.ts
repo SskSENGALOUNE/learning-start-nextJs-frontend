@@ -15,3 +15,8 @@ export interface TimedResult<T> {
     data: T;
     ms: number;
 }
+export interface BenchmarkResult {
+    pagination: { offset_page4000: number; cursor_start: number };
+    filter: { select_star: number; select_fields: number };
+    aggregation: { prisma_orm: number; raw_sql: number };
+}

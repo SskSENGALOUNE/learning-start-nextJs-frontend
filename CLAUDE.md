@@ -157,7 +157,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 > ใช้ endpoint กลุ่ม `bank-accounts` ที่ backend คืน timing (ms) มาด้วยอยู่แล้ว — โฟกัสที่การแสดงผลเปรียบเทียบ
 
 - [x] 1. หน้าเทียบ offset pagination vs cursor pagination — เรียกทั้งสอง endpoint แสดง ms ที่ backend คำนวณมาให้คู่กัน
-- [ ] 2. แสดงผล `benchmark` (`GET /bank-accounts/benchmark`) เป็นตาราง/กราฟเทียบเวลาของแต่ละวิธี
+- [x] 2. แสดงผล `benchmark` (`GET /bank-accounts/benchmark`) เป็นตาราง/กราฟเทียบเวลาของแต่ละวิธี
 - [ ] 3. ฟอร์ม filter ด้วย `accountType` + `isActive` พร้อมกัน (`GET /bank-accounts/composite`)
 - [ ] 4. หน้า leaderboard top-N บัญชี balance สูงสุด (`GET /bank-accounts/top?n=`)
 - [ ] 5. การ์ดสรุป stats รวม (`GET /bank-accounts/stats`)

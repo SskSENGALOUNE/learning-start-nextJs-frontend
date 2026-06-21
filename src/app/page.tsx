@@ -5,6 +5,7 @@ const pages = [
   { href: "/categories", label: "Categories" },
   { href: "/customer", label: "Customers" },
   { href: "/bank-accounts/compare", label: "Bank Accounts (Offset vs Cursor)" },
+  { href: "/bank-accounts/benchmark", label: "Benchmark (Compare 4 method)" },
 ];
 
 export default function Home() {

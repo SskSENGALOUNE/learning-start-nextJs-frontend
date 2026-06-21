@@ -1,5 +1,5 @@
 import { apiFetch } from "../configs/httpClient";
-import { BankAccount, TimedResult } from "../types/bankAccount";
+import { BankAccount, BenchmarkResult, TimedResult } from "../types/bankAccount";
 
 export const bankAccountService = {
     getOffset(page: number, limit: number) {
@@ -10,4 +10,8 @@ export const bankAccountService = {
         if (cursorId) query.set("cursorId", String(cursorId));
         return apiFetch<TimedResult<BankAccount[]>>(`/bank-accounts/cursor?${query.toString()}`);
     },
+    getBenchmark() {
+    return apiFetch<BenchmarkResult>("/bank-accounts/benchmark");
+},
+
 };
