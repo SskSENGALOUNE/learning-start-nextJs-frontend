@@ -1,5 +1,5 @@
 import { apiFetch } from "../configs/httpClient";
-import { BankAccount, BenchmarkResult, TimedResult } from "../types/bankAccount";
+import { AccountType, BankAccount, BenchmarkResult, CompositeFilterResult, TimedResult } from "../types/bankAccount";
 
 export const bankAccountService = {
     getOffset(page: number, limit: number) {
@@ -12,6 +12,14 @@ export const bankAccountService = {
     },
     getBenchmark() {
     return apiFetch<BenchmarkResult>("/bank-accounts/benchmark");
+},
+getComposite(accountType: AccountType, isActive: boolean, limit: number) {
+    const query = new URLSearchParams({
+        accountType,
+        isActive: String(isActive),
+        limit: String(limit),
+    });
+    return apiFetch<CompositeFilterResult>(`/bank-accounts/composite?${query.toString()}`);
 },
 
 };

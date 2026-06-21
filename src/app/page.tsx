@@ -6,6 +6,8 @@ const pages = [
   { href: "/customer", label: "Customers" },
   { href: "/bank-accounts/compare", label: "Bank Accounts (Offset vs Cursor)" },
   { href: "/bank-accounts/benchmark", label: "Benchmark (Compare 4 method)" },
+  { href: "/bank-accounts/composite", label: "Composite Filter" },
+
 ];
 
 export default function Home() {
