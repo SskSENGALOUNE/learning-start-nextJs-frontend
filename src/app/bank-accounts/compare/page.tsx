@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useOffsetVsCursor } from "@/hooks/useOffsetVsCursor";
+import { LoadingToast } from "@/components/LoadingToast";
+import { Toast } from "@/components/Toast";
 
 export default function CompareBankAccountsPage() {
-    const { offsetResult, cursorResult, loading, run } = useOffsetVsCursor(20);
+    const { offsetResult, cursorResult, loading, error, run } = useOffsetVsCursor(20);
     const [page, setPage] = useState(1);
 
     const handleNextPage = () => {
@@ -17,7 +19,8 @@ export default function CompareBankAccountsPage() {
     return (
         <main>
             <h1>Offset vs Cursor Pagination</h1>
-            {loading && <p>Loading...</p>}
+            <LoadingToast show={loading} />
+            <Toast message={error} />
 
             <section>
                 <h2>Offset (page {page})</h2>
