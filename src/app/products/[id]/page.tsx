@@ -2,13 +2,14 @@
 
 import { useProduct } from "@/hooks/useProduct"
 import { useParams } from "next/navigation"
+import { SkeletonDetail } from "@/components/ui/Skeleton"
 
 
 export default function ProductDetailPage(){
     const params = useParams<{id: string}>()
     const {data, loading, error} = useProduct(Number(params.id))
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <main><SkeletonDetail /></main>;
     if (error) return <p>Error: {error}</p>;
     if (!data) return <p>Not found</p>;
 

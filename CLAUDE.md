@@ -12,6 +12,12 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
 # ความสัมพันธ์กับ backend (อ่านก่อนเขียน fetcher ตัวแรก)
 
 - backend รันที่ `http://localhost:3000/api` (ดู `main.ts` ฝั่ง backend — global prefix `api`, CORS เปิดไว้แล้ว)
+- frontend นี้รันที่ port **3001** (`next dev -p 3001` ใน `package.json`) เพื่อไม่ชนกับ backend ที่ port 3000
+- **ต้องมีไฟล์ `.env` ที่ root ของ frontend** ตั้งค่า base URL ให้ `httpClient.ts` (ถ้าไม่มี → `fetch` ยิงไป `undefined/...` ได้ HTML กลับมา → error `Unexpected token '<' ... is not valid JSON`):
+  ```env
+  NEXT_PUBLIC_API_URL=http://localhost:3000/api
+  ```
+  ต้องขึ้นต้นด้วย `NEXT_PUBLIC_` เพราะ `apiFetch` ทำงานฝั่ง client + ต้องมี `/api` ต่อท้าย (service เรียก path แบบ `/product` ไม่ใส่ prefix เอง) และต้อง restart dev server ทุกครั้งหลังแก้ `.env`
 - ต้องเปิด backend ไว้คู่กันตลอดเวลาที่ฝึก (`npm run start:dev` ที่โฟลเดอร์ backend) เพราะ frontend นี้ไม่มี mock data
 - **ทุก response จาก backend ถูกห่อด้วย envelope เดียวกันหมด** (มาจาก global `TransformInterceptor`):
   ```ts
@@ -46,7 +52,7 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
   - `GET /api/bank-accounts/offset?page=&limit=`, `/cursor?cursorId=&limit=`, `/filter?bankName=&limit=`, `/stats`,
     `/top?n=`, `/top/orm?n=`, `/composite?accountType=&isActive=&limit=`, `/index-compare?bankName=&rate=&limit=`, `/benchmark`
 - ถ้า endpoint ไหนดูไม่ตรงกับที่เขียนไว้ตรงนี้ (backend อาจถูกแก้ไประหว่างฝึก) ให้เปิดไฟล์ controller จริงที่
-  `../start-lernning-backend-nestJS-CRUD/src/presentation/<resource>/<resource>.controller.ts` เพื่อเช็คของจริงก่อนเขียน
+  `../learning-start-nestJs-backend/src/presentation/<resource>/<resource>.controller.ts` เพื่อเช็คของจริงก่อนเขียน
 
 # วิธีที่ Claude ควรช่วย (สำคัญ — อ่านก่อนเริ่มแต่ละ checklist item)
 
@@ -114,7 +120,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 - [x] 1. หน้า list แสดง product ทั้งหมด (`GET /api/product`) — Client Component + `useProducts()` hook (เสร็จแล้ว ดู `src/hooks/useProducts.ts`)
 - [x] 2. หน้า detail ตาม id แบบ dynamic route `/product/[id]` (`GET /api/product/:id`)
 - [x] 3. กล่อง search ค้นหา category ด้วย keyword (`GET /api/category/search?keyword=`) — Client Component + debounce
-- [ ] 4. ฟอร์ม filter product ด้วยช่วงราคา min/max (`GET /api/product/search?minPrice=&maxPrice=`)
+- [x] 4. ฟอร์ม filter product ด้วยช่วงราคา min/max (`GET /api/product/search?minPrice=&maxPrice=`) — ดู `useProducts.ts` (สลับ `searchByPrice` เมื่อมี min+max) + ฟอร์มใน `products/page.tsx`
 - [ ] 5. ปุ่ม/dropdown sort product ตามราคา asc/desc (`GET /api/product/sort?order=`)
 - [ ] 6. ฟอร์ม filter รวมหลาย field พร้อมกัน (`GET /api/product/filter?minPrice=&minStock=`)
 - [x] 7. Pagination แบบปุ่ม "หน้าก่อน/หน้าถัดไป" (`GET /api/product?page=&limit=`)

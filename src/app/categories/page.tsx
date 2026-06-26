@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCategories } from "@/hooks/useCategories";
+import { SkeletonList } from "@/components/ui/Skeleton";
 
 export default function CategoriesPage() {
     const [keyword, setKeyword] = useState("");
@@ -19,14 +20,17 @@ export default function CategoriesPage() {
                 placeholder="ค้นหา category..."
             />
 
-            {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
 
-            <ul>
-                {data.map((c) => (
-                    <li key={c.id}>{c.name}</li>
-                ))}
-            </ul>
+            {loading ? (
+                <SkeletonList rows={5} />
+            ) : (
+                <ul>
+                    {data.map((c) => (
+                        <li key={c.id}>{c.name}</li>
+                    ))}
+                </ul>
+            )}
         </main>
     );
 }

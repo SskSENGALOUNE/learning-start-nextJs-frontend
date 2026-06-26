@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { DeleteModal } from "@/components/ui/DeleteModal";
 import { LoadingModal } from "@/components/ui/LoadingModal";
+import { ProductRowsSkeleton } from "@/components/ui/Skeleton";
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
 import { useProducts } from "@/hooks/useProducts";
 import { Product } from "@/lib/types/product";
@@ -18,22 +19,20 @@ export default function ProductsPage() {
 
   const onFilter = (e: React.FormEvent) => {
     e.preventDefault();
-    updateParams({ minPrice: min, maxPrice: max });  // เปลี่ยน params → useEffect ใน hook ยิงเอง
+    updateParams({ minPrice: min, maxPrice: max }); // เปลี่ยน params → useEffect ใน hook ยิงเอง
   };
 
   const onClear = () => {
-    setMin(""); setMax("");
-    updateParams({ minPrice: "", maxPrice: "" });     // กลับไปโหมด list ปกติ
+    setMin("");
+    setMax("");
+    updateParams({ minPrice: "", maxPrice: "" }); // กลับไปโหมด list ปกติ
   };
-
-
 
   return (
     <main className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <LoadingModal show={deleting} message="กำลังลบสินค้า..." />
-        <LoadingModal show={loading} message="กำลังโหลดข้อมูล..." />
         <DeleteModal
           show={!!deleteTarget}
           itemName={deleteTarget?.name ?? ""}
@@ -72,20 +71,53 @@ export default function ProductsPage() {
             </svg>
             Create Product
           </Link>
-          <form onSubmit={onFilter} className="flex gap-2 mb-4">
-            <input value={min} onChange={(e) => setMin(e.target.value)} type="number" placeholder="ราคาต่ำสุด" />
-            <input value={max} onChange={(e) => setMax(e.target.value)} type="number" placeholder="ราคาสูงสุด" />
-            <button type="submit">ค้นหา</button>
-            <button type="button" onClick={onClear}>ล้าง</button>
+          <select
+            className="rounded-lg text-xs text-black"
+            value={params.sortOrder}
+            onChange={(e) => updateParams({ sortOrder: e.target.value })}
+          >
+            <option value="">Default</option>
+            <option value="asc">Low to High</option>
+            <option value="desc">High to Low</option>
+          </select>
+          <form
+            onSubmit={onFilter}
+            className="flex flex-wrap items-center gap-2 mb-4"
+          >
+            <input
+              value={min}
+              onChange={(e) => setMin(e.target.value)}
+              type="number"
+              placeholder="ราคาต่ำสุด"
+              className="w-32 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              value={max}
+              onChange={(e) => setMax(e.target.value)}
+              type="number"
+              placeholder="ราคาสูงสุด"
+              className="w-32 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer"
+            >
+              ค้นหา
+            </button>
+            <button
+              type="button"
+              onClick={onClear}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors cursor-pointer"
+            >
+              ล้าง
+            </button>
           </form>
 
           {/* empty state: filter แล้วไม่เจอ */}
           {!loading && data.length === 0 && <p>ไม่พบสินค้าในช่วงราคานี้</p>}
 
-
           {/* empty state: filter แล้วไม่เจอ */}
           {!loading && data.length === 0 && <p>ไม่พบสินค้าในช่วงราคานี้</p>}
-
         </div>
 
         {/* Table Content Card */}
@@ -109,7 +141,10 @@ export default function ProductsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {data.map((p) => (
+                {loading ? (
+                  <ProductRowsSkeleton rows={params.limit} />
+                ) : (
+                  data.map((p) => (
                   <tr
                     key={p.id}
                     className="hover:bg-gray-50/50 transition-colors"
@@ -162,7 +197,8 @@ export default function ProductsPage() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCompositeFilter } from "@/hooks/useCompositeFilter";
 import { AccountType } from "@/lib/types/bankAccount";
+import { SkeletonList } from "@/components/ui/Skeleton";
 
 export default function CompositeFilterPage() {
     const { data, loading, error, run } = useCompositeFilter();
@@ -34,7 +35,7 @@ export default function CompositeFilterPage() {
                 <button type="submit">Run</button>
             </form>
 
-            {loading && <p>Loading...</p>}
+            {loading && <SkeletonList rows={2} />}
             {error && <p>Error: {error}</p>}
             {data && (
                 <table>

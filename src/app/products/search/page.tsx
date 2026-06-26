@@ -1,6 +1,7 @@
 "use client";
 import { useProductSearch } from "@/hooks/useProductSearch";
 import { useState } from "react";
+import { SkeletonList } from "@/components/ui/Skeleton";
 
 export default function ProductSearchPage() {
     const { data, loading, searched, search } = useProductSearch()
@@ -28,7 +29,9 @@ export default function ProductSearchPage() {
             </form>
             {error && <p className="text-red-600">{error}</p>}
 
-            {!searched ? (
+            {loading ? (
+                <SkeletonList rows={4} />
+            ) : !searched ? (
                 <p>กรอกช่วงราคาแล้วกดค้นหา</p>
             ) : data.length === 0 ? (
                 <p>ไม่พบสินค้าในช่วงราคานี้</p>      // ← empty state จริง

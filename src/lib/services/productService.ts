@@ -26,12 +26,15 @@ export const productService = {
     });
   },
 
+  sortByPrice(sort: "asc" | "desc") {
+    return apiFetch<Product[]>(`/product/sort?order=${sort}`);
+  },
   searchByPrice(minPrice: number, maxPrice: number) {
     const query = new URLSearchParams({
       minPrice: String(minPrice),
-      maxPrice: String(maxPrice)
-    })
-    return apiFetch<Product[]>(`/product/search?${query.toString()}`)
+      maxPrice: String(maxPrice),
+    });
+    return apiFetch<Product[]>(`/product/search?${query.toString()}`);
   },
   remove(id: number) {
     return apiFetch<void>(`/product/${id}`, {
