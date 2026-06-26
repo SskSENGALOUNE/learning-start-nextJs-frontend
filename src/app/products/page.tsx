@@ -13,6 +13,20 @@ export default function ProductsPage() {
   const { data, meta, loading, params, updateParams, refresh } = useProducts();
   const { remove, deleting } = useDeleteProduct();
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
+  const [min, setMin] = useState("");
+  const [max, setMax] = useState("");
+
+  const onFilter = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateParams({ minPrice: min, maxPrice: max });  // เปลี่ยน params → useEffect ใน hook ยิงเอง
+  };
+
+  const onClear = () => {
+    setMin(""); setMax("");
+    updateParams({ minPrice: "", maxPrice: "" });     // กลับไปโหมด list ปกติ
+  };
+
+
 
   return (
     <main className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -58,6 +72,20 @@ export default function ProductsPage() {
             </svg>
             Create Product
           </Link>
+          <form onSubmit={onFilter} className="flex gap-2 mb-4">
+            <input value={min} onChange={(e) => setMin(e.target.value)} type="number" placeholder="ราคาต่ำสุด" />
+            <input value={max} onChange={(e) => setMax(e.target.value)} type="number" placeholder="ราคาสูงสุด" />
+            <button type="submit">ค้นหา</button>
+            <button type="button" onClick={onClear}>ล้าง</button>
+          </form>
+
+          {/* empty state: filter แล้วไม่เจอ */}
+          {!loading && data.length === 0 && <p>ไม่พบสินค้าในช่วงราคานี้</p>}
+
+
+          {/* empty state: filter แล้วไม่เจอ */}
+          {!loading && data.length === 0 && <p>ไม่พบสินค้าในช่วงราคานี้</p>}
+
         </div>
 
         {/* Table Content Card */}

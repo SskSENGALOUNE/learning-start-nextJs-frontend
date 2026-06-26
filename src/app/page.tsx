@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const pages = [
   { href: "/products", label: "Products" },
+  { href: "/products/search", label: "Product Search" },
   { href: "/categories", label: "Categories" },
   { href: "/customer", label: "Customers" },
   { href: "/bank-accounts/compare", label: "Bank Accounts (Offset vs Cursor)" },

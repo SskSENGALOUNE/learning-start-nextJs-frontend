@@ -25,6 +25,14 @@ export const productService = {
       body: JSON.stringify(payload),
     });
   },
+
+  searchByPrice(minPrice: number, maxPrice: number) {
+    const query = new URLSearchParams({
+      minPrice: String(minPrice),
+      maxPrice: String(maxPrice)
+    })
+    return apiFetch<Product[]>(`/product/search?${query.toString()}`)
+  },
   remove(id: number) {
     return apiFetch<void>(`/product/${id}`, {
       method: "DELETE",
