@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 const page = () => {
     const params = useParams<{ id: string }>();
     const id = Number(params.id);                  // string จาก URL → number (เรื่องเดิมที่เราคุยกัน!)
-    const { data, loading } = useProduct(id);      // ✅ reuse hook เดิม pre-fill
+    const { data, loading, error } = useProduct(id);      // ✅ reuse hook เดิม pre-fill
     const { update, submitting } = useUpdateProduct();
 
     const [name, setName] = useState("");
@@ -31,7 +31,9 @@ const page = () => {
     }, [data]);
 
     if (loading) return <p>กำลังโหลด...</p>;   // วางก่อน return ฟอร์ม
-
+    if (error) {
+        return <p>เกิดข้อผิดพลาด: {error}</p>
+    };
     return (
         <div>
             <form onSubmit={onSubmit}>

@@ -163,7 +163,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 - [ ] 10. หน้า order detail ที่แสดง customer + รายการ items ครบ (`GET /api/order/:id`)
 - [ ] 11. dropdown filter order ตาม status (`GET /api/order/status?status=`)
 - [x] 12. Loading state ด้วย `loading.tsx` หรือ skeleton ระหว่างรอ fetch — `<ProductRowsSkeleton>` ใน `products/page.tsx`
-- [ ] 13. Error state แสดง message จริงจาก backend ตอน fetch ล้มเหลว (เช่น `:id` ที่ไม่มีจริง → 404)
+- [x] 13. Error state แสดง message จริงจาก backend ตอน fetch ล้มเหลว (เช่น `:id` ที่ไม่มีจริง → 404) — `if (error) return ...` ในหน้า detail + edit (message มาจาก `httpClient` ที่ `throw new Error(json.message)` → hook `setError` → page)
 - [x] 14. Empty state ตอนผลลัพธ์ไม่มีข้อมูล (เช่น filter ไม่เจอ, search ไม่เจอ) — ข้อความ "ไม่พบสินค้าในช่วงราคานี้" ใน `products/page.tsx`
 
 ## POST — ฟอร์มส่งข้อมูลสร้างใหม่ (8 ครั้ง)
