@@ -145,58 +145,60 @@ export default function ProductsPage() {
                   <ProductRowsSkeleton rows={params.limit} />
                 ) : (
                   data.map((p) => (
-                  <tr
-                    key={p.id}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-gray-950">{p.name}</div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-600 font-medium">
-                      ฿{p.price.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      {p.stock > 0 ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                          <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                          {p.stock} units
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                          Out of stock
-                        </span>
-                      )}
-                    </td>
-                    {/* แทนทั้งหมดตั้งแต่บรรทัด 94 ถึง 132 ด้วยอันนี้อันเดียว */}
-                    <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/products/${p.id}`}
-                        className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                      >
-                        View Details
-                        <svg
-                          className="w-4 h-4 ml-0.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                    <tr
+                      key={p.id}
+                      className="hover:bg-gray-50/50 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="font-medium text-gray-950">{p.name}</div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600 font-medium">
+                        ฿{p.price.toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4">
+                        {p.stock > 0 ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            {p.stock} units
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                            Out of stock
+                          </span>
+                        )}
+                      </td>
+                      {/* แทนทั้งหมดตั้งแต่บรรทัด 94 ถึง 132 ด้วยอันนี้อันเดียว */}
+                      <td className="px-6 py-4 text-right">
+                        <Link
+                          href={`/products/${p.id}`}
+                          className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </Link>
-                      <button
-                        onClick={() => setDeleteTarget(p)}
-                        className="ml-4 text-red-600 hover:underline cursor-pointer"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+                          View Details
+                          <svg
+                            className="w-4 h-4 ml-0.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </Link>
+                        <Link href={`/products/${p.id}/edit`}>แก้ไข</Link>
+
+                        <button
+                          onClick={() => setDeleteTarget(p)}
+                          className="ml-4 text-red-600 hover:underline cursor-pointer"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
                   ))
                 )}
               </tbody>

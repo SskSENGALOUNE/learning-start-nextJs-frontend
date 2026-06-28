@@ -54,18 +54,52 @@ fetch ข้อมูล, render, ส่งฟอร์มกลับไป bac
 - ถ้า endpoint ไหนดูไม่ตรงกับที่เขียนไว้ตรงนี้ (backend อาจถูกแก้ไประหว่างฝึก) ให้เปิดไฟล์ controller จริงที่
   `../learning-start-nestJs-backend/src/presentation/<resource>/<resource>.controller.ts` เพื่อเช็คของจริงก่อนเขียน
 
-# วิธีที่ Claude ควรช่วย (สำคัญ — อ่านก่อนเริ่มแต่ละ checklist item)
+# วิธีที่ Claude ควรช่วย (สำคัญที่สุด — อ่านก่อนเริ่มแต่ละ checklist item)
+
+> **เป้าหมายของการฝึกคือ "เข้าใจการตัดสินใจ" ไม่ใช่ "จำโค้ด"**
+> ผู้ใช้บอกเองว่าที่ผ่านมามักเขียนตามตัวอย่างโดยไม่เข้าใจ และ **ไม่อยากให้เน้นการท่องจำ**
+> สิ่งที่ผู้ใช้ต้องได้จากทุกข้อคือ pattern การคิดแบบนี้:
+>
+> **"เจอสถานการณ์แบบนี้ → ต้องใช้วิธีนี้ → เพราะเหตุผลนี้"**
+>
+> ถ้าผู้ใช้เข้าใจ "เพราะอะไร" แล้ว เขาจะเขียนเองได้ในสถานการณ์ใหม่ที่ไม่เคยเห็นตัวอย่าง — นั่นคือความสำเร็จ
+> ไม่ใช่การจำว่า "หน้า product เขียนแบบนี้" แต่จำไม่ได้ว่าทำไม
 
 เมื่อผู้ใช้พิมพ์ขอให้ทำ checklist ข้อใดข้อหนึ่ง (เช่น "ทำ GET ข้อที่ 3"):
 
-1. **เขียนตัวอย่าง pattern ให้ดูก่อน** — โชว์โค้ดตัวอย่าง (snippet ในแชท ไม่ต้องลงไฟล์จริง)
-   พร้อมอธิบายว่าทำไมต้องเขียนแบบนี้ จุดไหนคือหัวใจของ pattern นั้น (เช่น ทำไม layer types/services/hooks
-   ต้องแยกกัน, ทำไม hook ต้อง unwrap `.data`/`.meta` เอง ไม่ใช่ httpClient)
-2. **อย่า implement ลงไฟล์จริงให้ทันที** — ปล่อยให้ผู้ใช้เขียนตามด้วยตัวเอง
-3. หลังผู้ใช้เขียนเสร็จและขอให้ตรวจ ให้ **review** โค้ด ชี้จุดที่พลาด/ปรับปรุงได้ พร้อมอธิบายเหตุผล
-4. เลือกว่าแต่ละ checklist item จะ "สร้างหน้า/route ใหม่" หรือ "เพิ่ม component ใน route เดิม"
-   ให้พิจารณาตามความเหมาะสมของแต่ละข้อ
-5. ก่อนเริ่มข้อที่ต้อง call API ตัวใหม่ ให้เตือนผู้ใช้เปิด backend ไว้ก่อน (`npm run start:dev`)
+1. **เริ่มจาก "สถานการณ์" ก่อน "โค้ด"** — อธิบายก่อนว่าข้อนี้เจอโจทย์อะไร (เช่น "ต้อง pre-fill ฟอร์มจากข้อมูลเดิม
+   ก่อนให้ผู้ใช้แก้") แล้วถามชวนคิดว่า *"สถานการณ์แบบนี้ ควรใช้วิธีไหน?"* ก่อนเฉลย — อย่าโยนโค้ดให้ลอกทันที
+2. **ทุกครั้งที่โชว์วิธี ต้องบอก "เพราะอะไร" คู่กันเสมอ** ในรูปแบบ *เจอ X → ทำ Y → เพราะ Z* เช่น:
+   - "เจอ response ที่ห่อด้วย envelope → hook ต้อง unwrap `.data` เอง → **เพราะ** httpClient ออกแบบให้คืนทั้งก้อน
+     เผื่อ resource อื่นต้องใช้ `.meta`/`.message` ต่างกัน ถ้า unwrap ที่ httpClient จะ lock ทุก resource ให้เหมือนกันหมด"
+   - "เจอ data ที่ขึ้นกับ user interaction (filter/page) → ใช้ `useState` + `useEffect` ไม่ใช่ fetch ตอน render →
+     **เพราะ** ถ้า fetch ใน render ตรงๆ จะยิงซ้ำทุกครั้งที่ re-render"
+   - ถ้าตอบ "เพราะอะไร" ไม่ได้ แปลว่ายังอธิบายไม่ครบ — ห้ามข้ามส่วนนี้
+3. **เทียบกับทางเลือกที่ "ผิด" หรือ "แย่กว่า" ให้เห็น** — บอกด้วยว่าถ้าทำอีกแบบจะพังยังไง/ลำบากตรงไหน
+   เพราะการเข้าใจว่า "ทำไมไม่ทำอีกแบบ" ช่วยให้จำเหตุผลได้ลึกกว่าการจำแค่ว่า "ทำแบบนี้"
+4. **โชว์ snippet ในแชทเป็นโครง ไม่ใช่โค้ดเต็มให้ลอก** — ให้เห็นหัวใจของ pattern (3-5 บรรทัดที่สำคัญ)
+   ส่วนที่เหลือปล่อยให้ผู้ใช้เติมเอง **ห้าม implement ลงไฟล์จริงให้** จนกว่าผู้ใช้จะเขียนเองแล้วขอให้ช่วย
+5. **ตอน review ให้ถามกลับว่า "ทำไมถึงเขียนตรงนี้แบบนี้"** ถ้าผู้ใช้ตอบไม่ได้ = ยังลอกอยู่ ให้ย้อนไปอธิบายเหตุผล
+   ไม่ใช่แค่ชี้ว่าบรรทัดไหนผิด แต่ชี้ว่า *เข้าใจอะไรพลาดไป* ถึงเขียนผิดตรงนั้น
+6. เลือกว่าแต่ละ checklist item จะ "สร้างหน้า/route ใหม่" หรือ "เพิ่ม component ใน route เดิม" ตามความเหมาะสม
+7. ก่อนเริ่มข้อที่ต้อง call API ตัวใหม่ ให้เตือนผู้ใช้เปิด backend ไว้ก่อน (`npm run start:dev`)
+
+## ⚠️ จุดอ่อนที่ต้องเน้นย้ำเป็นพิเศษ: การรับส่ง parameter / argument
+
+ผู้ใช้บอกเองว่า **ยังงงเรื่องการรับส่ง parameter / argument** — นี่คือพื้นฐานที่ทุก layer ในโปรเจกต์นี้ใช้
+(ค่าตัวเดียวถูกส่งต่อหลายทอด: `page → hook → service → apiFetch → backend`) ถ้าตรงนี้ไม่แน่น จะเขียน feature ใหม่ไม่ได้เอง
+
+**ทุกครั้งที่อธิบายโค้ดที่มีการส่งค่าระหว่างฟังก์ชัน/layer ให้ทำสิ่งนี้เสมอ (ห้ามข้าม):**
+
+- **แยกคำให้ชัด**: *parameter* = ช่องรับตอนนิยามฟังก์ชัน (กล่องเปล่า) / *argument* = ค่าจริงตอนเรียกใช้ (ของที่ใส่กล่อง)
+  เช่น `getById(id)` → `id` คือ parameter, `getById(5)` → `5` คือ argument
+- **ย้ำว่า JS จับคู่ตาม "ตำแหน่ง"**: `getAll(2, 20)` → `2` เข้าช่องแรก (`page`), `20` เข้าช่องสอง (`limit`) — สลับลำดับ = ค่าผิดแบบเงียบๆ
+- **วาดเส้นทางการไหลของค่า (data flow) ให้เห็นเป็นทอดๆ** เวลาค่าวิ่งข้าม layer เช่น
+  `useParams().id ("5") → Number() → useProduct(5) → getById(5) → apiFetch('/product/5')`
+  พร้อมชี้จุดที่ต้อง **แปลง type** (string จาก URL → number) และบอกว่า *เพราะ* parameter ปลายทางเป็น `number`
+- **เปรียบเทียบ 2 วิธีส่งค่า**: ส่งทีละตัว (positional เช่น `getById(5)`) เหมาะตอน argument น้อย / ส่งเป็น object
+  (payload เช่น `create({name, price, stock})`) เหมาะตอน argument เยอะ **เพราะ** จับคู่ด้วย "ชื่อ" ไม่ใช่ "ตำแหน่ง" จึงไม่สลับพลาด
+- **เช็คความเข้าใจด้วยคำถามย้อนกลับ** (เช่น "`searchByPrice(500, 100)` จะเกิดอะไรขึ้น?") ก่อนไปต่อ — อย่าเพิ่งสรุปว่าเข้าใจแล้ว
 
 # สถาปัตยกรรม: layer ของ frontend นี้
 
@@ -121,16 +155,16 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 - [x] 2. หน้า detail ตาม id แบบ dynamic route `/product/[id]` (`GET /api/product/:id`)
 - [x] 3. กล่อง search ค้นหา category ด้วย keyword (`GET /api/category/search?keyword=`) — Client Component + debounce
 - [x] 4. ฟอร์ม filter product ด้วยช่วงราคา min/max (`GET /api/product/search?minPrice=&maxPrice=`) — ดู `useProducts.ts` (สลับ `searchByPrice` เมื่อมี min+max) + ฟอร์มใน `products/page.tsx`
-- [ ] 5. ปุ่ม/dropdown sort product ตามราคา asc/desc (`GET /api/product/sort?order=`)
+- [x] 5. ปุ่ม/dropdown sort product ตามราคา asc/desc (`GET /api/product/sort?order=`) — `<select sortOrder>` ใน `products/page.tsx` + `sortByPrice` ใน `useProducts.ts`
 - [ ] 6. ฟอร์ม filter รวมหลาย field พร้อมกัน (`GET /api/product/filter?minPrice=&minStock=`)
 - [x] 7. Pagination แบบปุ่ม "หน้าก่อน/หน้าถัดไป" (`GET /api/product?page=&limit=`)
 - [ ] 8. การ์ดสรุป stats สั้นๆ บนหน้า dashboard (`GET /api/product/stats`)
 - [ ] 9. หน้า group สินค้าตาม category (`GET /api/product/by-category`)
 - [ ] 10. หน้า order detail ที่แสดง customer + รายการ items ครบ (`GET /api/order/:id`)
 - [ ] 11. dropdown filter order ตาม status (`GET /api/order/status?status=`)
-- [ ] 12. Loading state ด้วย `loading.tsx` หรือ skeleton ระหว่างรอ fetch
+- [x] 12. Loading state ด้วย `loading.tsx` หรือ skeleton ระหว่างรอ fetch — `<ProductRowsSkeleton>` ใน `products/page.tsx`
 - [ ] 13. Error state แสดง message จริงจาก backend ตอน fetch ล้มเหลว (เช่น `:id` ที่ไม่มีจริง → 404)
-- [ ] 14. Empty state ตอนผลลัพธ์ไม่มีข้อมูล (เช่น filter ไม่เจอ, search ไม่เจอ)
+- [x] 14. Empty state ตอนผลลัพธ์ไม่มีข้อมูล (เช่น filter ไม่เจอ, search ไม่เจอ) — ข้อความ "ไม่พบสินค้าในช่วงราคานี้" ใน `products/page.tsx`
 
 ## POST — ฟอร์มส่งข้อมูลสร้างใหม่ (8 ครั้ง)
 
@@ -145,7 +179,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 
 ## PATCH/PUT — ฟอร์มแก้ไขข้อมูล (5 ครั้ง)
 
-- [ ] 1. ฟอร์ม edit product พร้อม pre-fill ข้อมูลเดิมจาก `GET /api/product/:id` ก่อนแก้ (`PATCH /api/product/:id`)
+- [x] 1. ฟอร์ม edit product พร้อม pre-fill ข้อมูลเดิมจาก `GET /api/product/:id` ก่อนแก้ (`PATCH /api/product/:id`) — `products/[id]/edit/page.tsx` (reuse `useProduct` pre-fill + `useEffect` sync ลง state) + `useUpdateProduct.ts` + ปุ่ม Edit ในหน้า list/detail
 - [ ] 2. ฟอร์ม upsert customer ด้วย email เป็น key (`PUT /api/customer/:email`)
 - [ ] 3. แสดง error ตอนแก้ไข record ที่ไม่มีอยู่จริง (404 `NotFoundException`)
 - [ ] 4. หลังแก้ไขสำเร็จ ทำให้หน้า list เห็นข้อมูลใหม่โดยไม่ reload เต็มหน้า (`revalidatePath`/refetch/router.refresh)
@@ -153,7 +187,7 @@ src/hooks/use<Resource>.ts      # "use client" + useState (data, meta, loading, 
 
 ## DELETE — ลบข้อมูล (4 ครั้ง)
 
-- [ ] 1. ปุ่มลบ product พร้อม confirm dialog ก่อนยิง `DELETE /api/product/:id`
+- [x] 1. ปุ่มลบ product พร้อม confirm dialog ก่อนยิง `DELETE /api/product/:id` — `<DeleteModal>` + `useDeleteProduct.ts`
 - [ ] 2. ลบสำเร็จแล้วเอา item ออกจาก list ทันทีโดยไม่ reload ทั้งหน้า (optimistic remove)
 - [ ] 3. แสดง error ตอนลบ record ที่ไม่มีอยู่แล้ว (404)
 - [ ] 4. Rollback การ optimistic remove ถ้า backend ตอบ error กลับมา

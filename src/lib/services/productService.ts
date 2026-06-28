@@ -3,6 +3,7 @@ import {
   CreateProductPayload,
   CreateProductResponse,
   Product,
+  UpdateProductPayload,
 } from "@/lib/types/product";
 
 export const productService = {
@@ -24,6 +25,14 @@ export const productService = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+  },
+
+  update(id: number, payload: UpdateProductPayload) {
+    return apiFetch<Product>(`/product/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
   },
 
   sortByPrice(sort: "asc" | "desc") {

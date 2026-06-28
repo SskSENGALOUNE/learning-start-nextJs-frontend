@@ -5,14 +5,18 @@ export interface Product {
     stock: number;
 }
 
-export interface CreateProductPayload{
+export interface CreateProductPayload {
     name: string
     price: number
     stock: number
 }
 
-export interface CreateProductResponse{
+export interface CreateProductResponse {
     id: number
     name: string
     price: number
+}
+export interface UpdateProductPayload {
+    name?: string
+    price?: number
 }
